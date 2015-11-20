@@ -157,7 +157,8 @@ function testDependent(options, dependent) {
 
   var nameParts = dependent.split(NAME_COMMAND_SEPARATOR);
   la(nameParts.length, 'expected at least module name', dependent);
-  var moduleName = nameParts[0].trim();
+  var fullModuleName = nameParts[0].trim();
+  var moduleName = fullModuleName.split('/').pop();
   var moduleTestCommand = nameParts[1] || DEFAULT_TEST_COMMAND;
   var testModuleInFolder = _.partial(testInFolder, moduleTestCommand);
 
@@ -169,7 +170,7 @@ function testDependent(options, dependent) {
   la(check.positiveNumber(timeoutSeconds), 'wrong timeout', timeoutSeconds, options);
 
   return install({
-    name: moduleName,
+    name: fullModuleName,
     prefix: toFolder
   }).timeout(timeoutSeconds * 1000, 'install timed out for ' + moduleName)
     .then(function formFullFolderName() {
